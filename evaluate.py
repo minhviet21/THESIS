@@ -21,7 +21,7 @@ evaluator = Evaluator()
 test_data = pd.read_csv(test_path)
 
 true, false = 0, 0
-batch_size = 10
+batch_size = 50
 for i in range(0, len(test_data), batch_size):
     batch = test_data.iloc[i:i + batch_size] 
     questions = batch["question"].tolist()
