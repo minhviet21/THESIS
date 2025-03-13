@@ -15,27 +15,25 @@ collection_name = "vietnamese-bi-encoder_1"
 embedding_model_path = "models//vietnamese-bi-encoder"
 test_path = "data//clean//test.csv"
 
-qdrant_db = QdrantDB()
+qdrant_db = QdrantDB(url = QDRANT_URL, api_key = QDRANT_API_KEY)
 model = EmbeddingModel(embedding_model_path)
 evaluator = Evaluator()
 test_data = pd.read_csv(test_path)
 
-predictions = []
-grouth_truths = []
-true = 0
-false = 0
-for i in range(len(test_data)):
-    question = test_data.loc[i, "question"]
-    positive_indexs = test_data.loc[i, "positive_indexs"]
-    vector = model.encode([question])[0] 
-    search_results = qdrant_db.search(collection_name, vector, top_k=10)
-    predict_index = [result.id for result in search_results]
-    grouth_truth_index = ast.literal_eval(positive_indexs)
-    # predictions.append(predict_index)
-    # grouth_truths.append(grouth_truth_index)
-    result = evaluator.evaluate([predict_index], [grouth_truth_index])
-    if result == 1:
-        true += 1
-    else:
-        false += 1
+true, false = 0, 0
+batch_size = 10
+for i in range(0, len(test_data), batch_size):
+    batch = test_data.iloc[i:i + batch_size] 
+    questions = batch["question"].tolist()
+    positive_indexs = batch["positive_indexs"].tolist()
+    vectors = model.encode(questions)
+
+    search_results = [qdrant_db.search(collection_name, vector, top_k=10) for vector in vectors]
+    predict_indexs = [[result.id for result in search_result] for search_result in search_results]
+    grouth_truth_indexs = [ast.literal_eval(idx) for idx in positive_indexs]
+
+    true_, false_ = evaluator.evaluate(predict_indexs, grouth_truth_indexs)
+    true += true_
+    false += false_
+
     print(f"True: {true}, False: {false}")

@@ -7,7 +7,4 @@ class Evaluator:
                 true += 1
             else:
                 false += 1
-        return true / (true + false)
-
-            
-        
+        return true, false
