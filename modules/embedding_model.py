@@ -11,7 +11,7 @@ class EmbeddingModel():
     def encode(self, texts):
         if self.is_tokenized:
             texts = [tokenize(text) for text in texts]
-        if self.is_instruted:
+        if self.is_instructed:
             task_description = "Given a query, retrieve the most relevant documents that can answer the query"
             texts = [f'Instruct: {task_description}\nQuery: {text}' for text in texts]
         return self.model.encode(texts)
