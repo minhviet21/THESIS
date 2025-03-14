@@ -7,6 +7,7 @@ class EmbeddingModel():
         device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = SentenceTransformer(name).to(device)
         self.is_tokenized = is_tokenized
+        self.is_instructed = is_instructed
 
     def encode(self, texts):
         if self.is_tokenized:
