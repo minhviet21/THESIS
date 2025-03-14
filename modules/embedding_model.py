@@ -3,7 +3,7 @@ from pyvi.ViTokenizer import tokenize
 from sentence_transformers import SentenceTransformer
 
 class EmbeddingModel():
-    def __init__(self, name, is_tokenized = False, is_instruted = False):
+    def __init__(self, name, is_tokenized = False, is_instructed = False):
         device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = SentenceTransformer(name).to(device)
         self.is_tokenized = is_tokenized
