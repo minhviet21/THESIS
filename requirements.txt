@@ -4,3 +4,4 @@ python-dotenv
 torch
 pyvi
 together
+scikit-learn
