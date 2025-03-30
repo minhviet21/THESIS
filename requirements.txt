@@ -1,9 +1,9 @@
-weaviate-client
-sentence-transformers
-python-dotenv
-torch
-pyvi
-together
+weaviate-client==4.11.3
+sentence-transformers==3.4.1
+python-dotenv==1.0.1
+torch==2.6.0
+pyvi==0.1.1
+together==1.4.6
 scikit-learn
-transformers  
-py_vncorenlp
+transformers==4.49.0
+py_vncorenlp==0.1.4
