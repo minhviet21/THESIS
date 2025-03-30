@@ -22,28 +22,29 @@ model = BiEncoder(bi_encoder_path)
 test_data = pd.read_csv(test_path)
 
 def evaluate(grouth_truths, predictions):
-    true = 0
-    false = 0
+    true_count = 0
     for grouth_truth, prediction in zip(grouth_truths, predictions):
         if bool(set(grouth_truth) & set(prediction)):
             true += 1
-        else:
-            false += 1
-    return true, false
+    return true, len(grouth_truths) - true_count
+
 
 true, false = 0, 0
 batch_size = 50
+alpha = 0.5
+top_k = 5
+
 for i in range(0, len(test_data), batch_size):
     batch = test_data.iloc[i:i + batch_size] 
     questions = batch["question"].tolist()
     positive_indexs = batch["positive_indexs"].tolist()
     vectors = model.encode(questions)
 
-    search_results = [database.search(collection_name, vector, top_k=10) for vector in vectors]
-    predict_indexs = [[result.id for result in search_result] for search_result in search_results]
-    grouth_truth_indexs = [ast.literal_eval(idx) for idx in positive_indexs]
+    searchs = [database.search(collection_name, question, vector, alpha, top_k, index_only = True) 
+                      for (question, vector) in zip(questions, vectors)]
+    grouth_truths = [ast.literal_eval(idx) for idx in positive_indexs]
 
-    true_, false_ = evaluate(predict_indexs, grouth_truth_indexs)
+    true_, false_ = evaluate(searchs, grouth_truths)
     true += true_
     false += false_
 

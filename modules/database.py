@@ -30,26 +30,10 @@ class Database:
                         for index, context, vector in zip(indexs, texts, vectors)]
         collection = self.client.collections.get(collection_name)
         collection.data.insert_many(data_objects)
-
-    def vector_search(self, collection_name, vector, top_k=5):
-        collection = self.client.collections.get(collection_name)
-        results = collection.query.near_vector(
-            near_vector=vector,
-            limit=top_k,
-            return_metadata=MetadataQuery(distance=True),
-        )
-        return [object.properties for object in results.objects]
     
-    def keyword_search(self, collection_name, query, top_k=5):
-        collection = self.client.collections.get(collection_name)
-        results = collection.query.bm25(
-            query=query,
-            limit=top_k,
-            return_metadata=MetadataQuery(score=True),
-        )
-        return [object.properties for object in results.objects]
-    
-    def hybrid_search(self, collection_name, vector, query, alpha=5, top_k=5, fusion_type=HybridFusion.RELATIVE_SCORE):
+    def search(self, collection_name, query, vector, alpha=0.5, top_k=5, fusion_type=HybridFusion.RELATIVE_SCORE, index_only=False):
+        # alpha = 0 => keyword search only, alpha = 1 => vector search only
+        # fusion_type = HybridFusion.RELATIVE_SCORE or HybridFusion.RANKED
         collection = self.client.collections.get(collection_name)
         results = collection.query.hybrid(
             vector=vector,
@@ -59,7 +43,11 @@ class Database:
             fusion_type=fusion_type,
             return_metadata=MetadataQuery(score=True),
         )
-        return [object.properties for object in results.objects]
+        responses = [object.properties for object in results.objects]
+        if index_only:
+            return [response["index"] for response in responses]
+        else:
+            return responses
     
     def close(self):
         self.client.close()
