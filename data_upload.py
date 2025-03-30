@@ -8,9 +8,9 @@ load_dotenv()
 WEAVIATE_URL = os.getenv("WEAVIATE_URL")
 WEAVIATE_API_KEY = os.getenv("WEAVIATE_API_KEY")
 
-collection_name = "vietnamese_bi_encoder_1"
-bi_encoder_path = "models//vietnamese-bi-encoder"
-document_path = "data//clean//documents.csv"
+collection_name = ""
+bi_encoder_path = ""
+document_path = ""
 
 database = Database(url = WEAVIATE_URL, api_key = WEAVIATE_API_KEY)
 database.create_collection(collection_name)

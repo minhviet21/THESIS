@@ -31,7 +31,7 @@ class Database:
         collection = self.client.collections.get(collection_name)
         collection.data.insert_many(data_objects)
     
-    def search(self, collection_name, query, vector, alpha=0.5, top_k=5, fusion_type=HybridFusion.RELATIVE_SCORE, index_only=False):
+    def search(self, collection_name, query, vector, alpha=0.5, top_k=5, fusion_type=HybridFusion.RELATIVE_SCORE):
         # alpha = 0 => keyword search only, alpha = 1 => vector search only
         # fusion_type = HybridFusion.RELATIVE_SCORE or HybridFusion.RANKED
         collection = self.client.collections.get(collection_name)
@@ -43,11 +43,9 @@ class Database:
             fusion_type=fusion_type,
             return_metadata=MetadataQuery(score=True),
         )
-        responses = [object.properties for object in results.objects]
-        if index_only:
-            return [response["index"] for response in responses]
-        else:
-            return responses
+        indexs = [object.properties["index"] for object in results.objects]
+        contexts = [object.properties["text"] for object in results.objects]
+        return {"index": indexs, "context": contexts}
     
     def close(self):
         self.client.close()

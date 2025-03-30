@@ -6,3 +6,4 @@ pyvi
 together
 scikit-learn
 transformers  
+py_vncorenlp
