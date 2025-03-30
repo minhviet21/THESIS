@@ -6,4 +6,4 @@ pyvi==0.1.1
 together==1.4.6
 scikit-learn
 transformers==4.49.0
-py_vncorenlp==0.1.4
+# py_vncorenlp==0.1.4
