@@ -5,5 +5,5 @@ torch
 pyvi
 together
 scikit-learn
-transformers
+# transformers
 # py_vncorenlp==0.1.4

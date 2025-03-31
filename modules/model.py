@@ -1,7 +1,7 @@
 import torch
 from pyvi.ViTokenizer import tokenize
 from sentence_transformers import SentenceTransformer
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+# from transformers import AutoModelForSequenceClassification, AutoTokenizer
 # import py_vncorenlp
 
 class BiEncoder():
