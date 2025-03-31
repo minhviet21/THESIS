@@ -1,9 +1,9 @@
-# weaviate-client
+weaviate-client
 sentence-transformers
 python-dotenv
 torch
 pyvi
 together
 scikit-learn
-# transformers
-# py_vncorenlp==0.1.4
+transformers
+py_vncorenlp==0.1.4
